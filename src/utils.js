@@ -20,7 +20,7 @@ export const getRoutes = (allRoutes) =>
     return null;
   });
 
-export const handleScroll = (stanzaRefs, data, setHeaderValue, playAudio) => {
+export const handleMusicOnScroll = (stanzaRefs, data, setHeaderValue, playAudio) => {
   let currentPlaying = null;
   const scrollPosition = window.scrollY + window.innerHeight / 2;
   for (let i = 0; i < stanzaRefs.current.length; i++) {
@@ -74,7 +74,7 @@ export const setBackground = (darkMode) => {
 };
 
 export const calculateThresholds = (stanzaRefs, setThresholds) => {
-  const newThresholds = stanzaRefs.current.map((ref) => ref.offsetTop);
+  const newThresholds = stanzaRefs.current.map((ref) => ref.offsetTop + ref.offsetHeight);
   console.log("Calculated thresholds:", newThresholds);
   setThresholds(newThresholds);
 };

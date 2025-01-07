@@ -130,7 +130,7 @@ const StanzaCard = forwardRef(
             ref={ref}
             initial={{
               opacity: 0,
-              //y: scrolledPast ? -yMove : yMove
+              //y: scrolledPast ? -yMove : yMove 
               scale: 0.5, // Add scale property here
             }}
             animate={{
@@ -346,7 +346,9 @@ const StanzaCard = forwardRef(
                       damping: 40,
                     }}
                   >
-                    <Typography variant="body2">OPEN SPOTIFY</Typography>
+                    <Typography variant="body2">
+                      OPEN SPOTIFY
+                    </Typography>
                   </motion.div>
                 </motion.div>
               )}

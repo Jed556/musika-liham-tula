@@ -26,7 +26,7 @@ import useMusic from "./hooks/useMusic";
 import useAudioAnalysis from "./hooks/useAudioAnalysis";
 import {
   getRoutes,
-  handleScroll,
+  handleMusicOnScroll,
   setBackground,
   calculateThresholds,
   updateParticles,
@@ -84,30 +84,29 @@ export default function App() {
     playAudio(data[0].numeral);
   }, [playAudio, resumeAudioContext]);
 
-  const optimizedHandleScroll = useCallback(() => {
-    handleScroll(stanzaRefs, data, setHeaderValue, playAudio);
-  }, [playAudio]);
-
   useEffect(() => {
-    window.addEventListener("scroll", optimizedHandleScroll);
-    return () => {
-      window.removeEventListener("scroll", optimizedHandleScroll);
+    const handleScroll = () => {
+      handleMusicOnScroll(stanzaRefs, data, setHeaderValue, playAudio);
+      console.log("Scroll position:", window.scrollY);
     };
-  }, [optimizedHandleScroll]);
+
+    const handleResize = () => calculateThresholds(stanzaRefs, setThresholds);
+
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+
+    // Initial calculation of thresholds
+    calculateThresholds(stanzaRefs, setThresholds);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [playAudio]);
 
   useEffect(() => {
     setBackground(darkMode);
   }, [darkMode]);
-
-  useEffect(() => {
-    // Auto update scroll thresholds on window resize
-    calculateThresholds(stanzaRefs, setThresholds);
-    const handleResize = () => calculateThresholds(stanzaRefs, setThresholds);
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     document.body.style.background = `linear-gradient(135deg, rgba(${backgroundColor[0]}, ${backgroundColor[1]}, ${backgroundColor[2]}, 0.5), rgba(${backgroundColor[0]}, ${backgroundColor[1]}, ${backgroundColor[2]}, 0.8))`;
