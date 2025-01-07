@@ -75,7 +75,7 @@ export const setBackground = (darkMode) => {
 
 export const calculateThresholds = (stanzaRefs, setThresholds) => {
   const newThresholds = stanzaRefs.current.map((ref) => ref.offsetTop + ref.offsetHeight);
-  console.log("Calculated thresholds:", newThresholds);
+  //console.log("Calculated thresholds:", newThresholds);
   setThresholds(newThresholds);
 };
 
@@ -135,4 +135,59 @@ export const updateParticles = (canvasRef) => {
   return () => {
     window.removeEventListener("resize", handleResize);
   };
+};
+
+export const createBokehEffect = (canvas) => {
+  const ctx = canvas.getContext("2d");
+  const circles = [];
+
+  const createCircle = () => {
+    const radius = Math.random() * 50 + 10;
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+    const dx = (Math.random() - 0.5) * 2;
+    const dy = (Math.random() - 0.5) * 2;
+    const opacity = Math.random() * 0.5 + 0.1;
+    const color = `rgba(255, 255, 255, ${opacity})`;
+
+    circles.push({ x, y, dx, dy, radius, color });
+  };
+
+  const drawCircles = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    circles.forEach((circle) => {
+      ctx.beginPath();
+      ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2, false);
+      ctx.fillStyle = circle.color;
+      ctx.fill();
+      ctx.closePath();
+    });
+  };
+
+  const updateCircles = () => {
+    circles.forEach((circle) => {
+      circle.x += circle.dx;
+      circle.y += circle.dy;
+
+      if (circle.x + circle.radius > canvas.width || circle.x - circle.radius < 0) {
+        circle.dx = -circle.dx;
+      }
+
+      if (circle.y + circle.radius > canvas.height || circle.y - circle.radius < 0) {
+        circle.dy = -circle.dy;
+      }
+    });
+  };
+
+  const animate = () => {
+    requestAnimationFrame(animate);
+    updateCircles();
+    drawCircles();
+  };
+
+  for (let i = 0; i < 100; i++) {
+    createCircle();
+  }
+
+  animate();
 };
