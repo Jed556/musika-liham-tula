@@ -1,0 +1,50 @@
+{
+  "name": "musika-liham-tula",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.2.0",
+    "@mui/material": "^6.2.0",
+    "axios": "^1.7.9",
+    "colorthief": "^2.6.0",
+    "cra-template": "1.2.0",
+    "dotenv": "^16.4.7",
+    "framer-motion": "^10.12.0",
+    "html2canvas": "^1.4.1",
+    "prettier": "^3.4.2",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.14.1",
+    "react-scripts": "^5.0.1",
+    "rimraf": "^6.0.1",
+    "web-vitals": "^4.2.4"
+  },
+  "scripts": {
+    "start": "npm run format && react-scripts start",
+    "build": "npm run format && react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "install:clean": "rimraf node_modules/ package-lock.json && npm install && npm start",
+    "format": "npm update prettier && npx prettier --write src/**/*.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
