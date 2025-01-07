@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid2";
 import { motion, AnimatePresence } from "framer-motion";
 
 import routes from "./routes";
@@ -99,6 +100,7 @@ export default function App() {
   }, [darkMode]);
 
   useEffect(() => {
+    // Auto update scroll thresholds on window resize
     calculateThresholds(stanzaRefs, setThresholds);
     const handleResize = () => calculateThresholds(stanzaRefs, setThresholds);
     window.addEventListener("resize", handleResize);
@@ -125,17 +127,21 @@ export default function App() {
             onThemeChange={handleThemeChange}
           />
           <Container sx={{ marginTop: -5, marginBottom: 40 }}>
+            <Grid container spacing={2}>
               {data.map((card, index) => (
-                <StanzaCard
-                  key={index}
-                  title={card.title}
-                  threshold={thresholds[index] || 0}
-                  ref={(el) => (stanzaRefs.current[index] = el)}
-                  trackUrl={card.url}
-                  onColorChange={setBackgroundColor}
-                  lines={card.lines}
-                ></StanzaCard>
+                <Grid item xs={12} sm={6} md={4}>
+                  <StanzaCard
+                    key={index}
+                    title={card.title}
+                    threshold={thresholds[index] || 0}
+                    ref={(el) => (stanzaRefs.current[index] = el)}
+                    trackUrl={card.url}
+                    onColorChange={setBackgroundColor}
+                    lines={card.lines}
+                  ></StanzaCard>
+                </Grid>
               ))}
+            </Grid>
           </Container>
           <Footer values={footerValues} />
           <Router>

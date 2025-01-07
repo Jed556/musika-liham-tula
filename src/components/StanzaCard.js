@@ -123,18 +123,25 @@ const StanzaCard = forwardRef(
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: 25,
+            marginBottom: 10,
           }}
         >
           <motion.div
             ref={ref}
-            initial={{ opacity: 1, y: scrolledPast ? -yMove : yMove }}
+            initial={{
+              opacity: 0,
+              //y: scrolledPast ? -yMove : yMove
+              scale: 0.5, // Add scale property here
+            }}
             animate={{
-              y: isVisible ? 0 : scrolledPast ? -yMove : yMove,
+              // y: isVisible ? 0 : scrolledPast ? -yMove : yMove,
+              opacity: 1,
+              scale: isVisible ? 1 : 0.5, // Add scale property here
             }}
             exit={{
               opacity: 0,
-              y: scrolledPast ? -yMove : yMove,
+              // y: scrolledPast ? -yMove : yMove,
+              scale: 0.5, // Add scale property here
             }}
             transition={{ type: "spring", stiffness: 300, damping: 10 }}
             style={{
@@ -149,7 +156,7 @@ const StanzaCard = forwardRef(
             <Card
               sx={{
                 minWidth: 400,
-                marginY: 25,
+                marginY: 12,
                 padding: 5,
                 width: "100%",
                 height: "100%",
@@ -339,9 +346,7 @@ const StanzaCard = forwardRef(
                       damping: 40,
                     }}
                   >
-                    <Typography variant="body2">
-                      OPEN SPOTIFY
-                    </Typography>
+                    <Typography variant="body2">OPEN SPOTIFY</Typography>
                   </motion.div>
                 </motion.div>
               )}
