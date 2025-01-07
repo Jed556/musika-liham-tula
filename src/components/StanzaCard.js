@@ -116,6 +116,24 @@ const StanzaCard = forwardRef(
       setBubblePosition({ x: e.clientX, y: e.clientY });
     };
 
+    const getRandomColor = () => {
+      const letters = "0123456789ABCDEF";
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    };
+
+    const getGlowAnimation = () => {
+      const colors = Array.from({ length: 3 }, getRandomColor);
+      return `@keyframes glow {
+        0% { text-shadow: 0 0 5px ${colors[0]}, 0 0 10px ${colors[0]}, 0 0 15px ${colors[0]}, 0 0 20px ${colors[0]}; }
+        50% { text-shadow: 0 0 5px ${colors[1]}, 0 0 10px ${colors[1]}, 0 0 15px ${colors[1]}, 0 0 20px ${colors[1]}; }
+        100% { text-shadow: 0 0 5px ${colors[2]}, 0 0 10px ${colors[2]}, 0 0 15px ${colors[2]}, 0 0 20px ${colors[2]}; }
+      }`;
+    };
+
     return (
       <AnimatePresence>
         <Box
@@ -123,7 +141,6 @@ const StanzaCard = forwardRef(
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: 10,
           }}
         >
           <motion.div
@@ -270,12 +287,26 @@ const StanzaCard = forwardRef(
                           <Typography
                             variant="body1"
                             sx={{
-                              fontSize: "2rem",
+                              fontSize: "1.5rem", // Reduced font size
                               fontFamily: "Lineto Circular Black, sans-serif",
                             }}
                             fontSize={10}
                           >
-                            {line}
+                            {key === 2 ? (
+                              <span>
+                                <style>{getGlowAnimation()}</style>
+                                <span
+                                  style={{
+                                    animation: `glow 2s infinite`,
+                                  }}
+                                >
+                                  {line.charAt(0)}
+                                </span>
+                                {line.slice(1)}
+                              </span>
+                            ) : (
+                              line
+                            )}
                           </Typography>
                         </motion.div>
                       </Grid>

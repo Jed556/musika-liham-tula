@@ -41,6 +41,9 @@ const LoadingScreen = ({ onContinue, playAudio }) => {
       <Typography variant="h4" gutterBottom sx={{ mt: 2 }}>
         Loading
       </Typography>
+      <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
+        Open in desktop for the best experience
+      </Typography>
       <LinearProgress
         color="primary"
         sx={{ width: "80%", mb: 2, marginX: 20, marginY: 5 }}

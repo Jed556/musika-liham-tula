@@ -30,6 +30,7 @@ import {
   setBackground,
   calculateThresholds,
   updateParticles,
+  createBokehEffect,
 } from "./utils";
 import { data, footerValues } from "./data";
 import LoadingScreen from "./components/LoadingScreen";
@@ -47,6 +48,7 @@ export default function App() {
   const [thresholds, setThresholds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [backgroundColor, setBackgroundColor] = useState([255, 255, 255]);
+  const [backgroundStanza, setBackgroundStanza] = useState(data[0].numeral);
 
   const audioFiles = useMemo(() => {
     const files = new Map();
@@ -87,7 +89,15 @@ export default function App() {
   useEffect(() => {
     const handleScroll = () => {
       handleMusicOnScroll(stanzaRefs, data, setHeaderValue, playAudio);
-      console.log("Scroll position:", window.scrollY);
+      const currentStanza = data.find((item, index) => {
+        const card = stanzaRefs.current[index];
+        const scrollPosition = window.scrollY + window.innerHeight / 2;
+        return card && card.offsetTop <= scrollPosition && card.offsetTop + card.offsetHeight > scrollPosition;
+      });
+      if (currentStanza) {
+        setBackgroundStanza(currentStanza.numeral);
+      }
+      //console.log("Scroll position:", window.scrollY);
     };
 
     const handleResize = () => calculateThresholds(stanzaRefs, setThresholds);
@@ -112,6 +122,27 @@ export default function App() {
     document.body.style.background = `linear-gradient(135deg, rgba(${backgroundColor[0]}, ${backgroundColor[1]}, ${backgroundColor[2]}, 0.5), rgba(${backgroundColor[0]}, ${backgroundColor[1]}, ${backgroundColor[2]}, 0.8))`;
   }, [backgroundColor]);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createBokehEffect(canvas);
+
+      const handleResize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createBokehEffect(canvas); // Recreate bokeh effect on resize
+      };
+
+      window.addEventListener("resize", handleResize);
+
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+  }, []);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -120,12 +151,43 @@ export default function App() {
       )}
       {!loading && (
         <>
+          <canvas
+            ref={canvasRef}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: -1,
+            }}
+          />
+          <AnimatePresence>
+            <motion.div
+              key={backgroundStanza}
+              initial={{ opacity: 0, bottom: -50 }}
+              animate={{ opacity: 0.25, bottom: 0 }}
+              exit={{ opacity: 0, bottom: 50 }}
+              transition={{ duration: 1 }}
+              style={{
+                position: "fixed",
+                left: 0,
+                fontSize: "20vw",
+                fontFamily: "Archivo Black",
+                color: "white",
+                zIndex: -1,
+                pointerEvents: "none",
+              }}
+            >
+              {backgroundStanza}
+            </motion.div>
+          </AnimatePresence>
           <Header
             value={headerValue}
             darkMode={darkMode}
             onThemeChange={handleThemeChange}
           />
-          <Container sx={{ marginTop: -5, marginBottom: 40 }}>
+          <Container sx={{ marginTop: 2, marginBottom: 34 }}>
             <Grid container spacing={2}>
               {data.map((card, index) => (
                 <Grid item xs={12} sm={6} md={4}>
@@ -150,7 +212,8 @@ export default function App() {
             </Routes>
           </Router>
         </>
-      )}
-    </ThemeProvider>
+      )
+      }
+    </ThemeProvider >
   );
 }
